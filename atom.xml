@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://thegamelife.net/"/>
-  <updated>2017-10-06T03:37:05.000Z</updated>
+  <updated>2017-10-06T03:52:10.000Z</updated>
   <id>http://thegamelife.net/</id>
   
   <author>
@@ -17,12 +17,12 @@
   
   <entry>
     <title>blockly game</title>
-    <link href="http://thegamelife.net/2017/05/06/hello-world/"/>
-    <id>http://thegamelife.net/2017/05/06/hello-world/</id>
+    <link href="http://thegamelife.net/2017/05/06/blockly-game/"/>
+    <id>http://thegamelife.net/2017/05/06/blockly-game/</id>
     <published>2017-05-06T15:16:16.000Z</published>
-    <updated>2017-10-06T03:37:05.000Z</updated>
+    <updated>2017-10-06T03:52:10.000Z</updated>
     
-    <content type="html"><![CDATA[<p>搬自 <a href="https://blockly-games.appspot.com" target="_blank" rel="external">blockly game</a>! <a href="http://thegamelife.net/blockly-games/index-en.html">英文版本</a>! | <a href="http://thegamelife.net/blockly-games/index-zh-hans.html">中文版本</a>.</p>
+    <content type="html"><![CDATA[<p>搬自 <a href="https://blockly-games.appspot.com" target="_blank" rel="external">blockly game</a>! <a href="http://thegamelife.net/blockly-games/index-en.html">英文版本</a> | <a href="http://thegamelife.net/blockly-games/index-zh-hans.html">中文版本</a></p>
 ]]></content>
     
     <summary type="html">
